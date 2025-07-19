@@ -12,30 +12,27 @@ Para executar o UNSEC, você precisará ter o Python e a biblioteca Scapy instal
 
     Instalação do Scapy:
     Você pode instalar o Scapy usando pip:
-    Bash
+    
 
     pip install scapy
 
 🚀 Como Usar o UNSEC
 
     Primeiro, você precisará clonar o repositório do UNSEC para sua máquina local usando git clone. Abra seu terminal ou prompt de comando e execute:
-    Bash
-
-git clone https://github.com/lifealil/UNSEC.git
+    
+    git clone https://github.com/lifealil/UNSEC.git
 
 Entre no diretório UNSEC/:
-Bash
 
-cd UNSEC
+    cd UNSEC
 
 Após clonar o repositório e navegar para a pasta do projeto, instale a biblioteca Scapy usando pip (caso ainda não tenha instalado):
-Bash
 
-pip install scapy
+    pip install scapy
 
 Execute o Script:
 Abra um terminal ou prompt de comando e execute o script Python:
-Bash
+
 
     python unsec.py
 
@@ -100,7 +97,6 @@ Bash
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-Of course! Here's the documentation for UNSEC, completely translated into English.
 
 UNSEC
 
@@ -116,30 +112,26 @@ To run UNSEC, you'll need Python and the Scapy library installed on your system.
 
     Scapy Installation:
     You can install Scapy using pip:
-    Bash
-
+    
     pip install scapy
 
 🚀 How to Use UNSEC
 
     First, you'll need to clone the UNSEC repository to your local machine using git clone. Open your terminal or command prompt and execute:
-    Bash
-
-git clone https://github.com/lifealil/UNSEC.git
+    
+    git clone https://github.com/lifealil/UNSEC.git
 
 Enter the UNSEC/ directory:
-Bash
 
-cd UNSEC
+    cd UNSEC
 
 After cloning the repository and navigating to the project folder, install the Scapy library using pip (if you haven't already):
-Bash
 
-pip install scapy
+    pip install scapy
 
 Execute the Script:
 Open your terminal or command prompt and run the Python script:
-Bash
+
 
     python unsec.py
 
