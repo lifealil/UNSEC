@@ -1,134 +1,129 @@
-from scapy.all import *
+from scapy.all import sniff
+from colorama import init, Fore, Back, Style
 import time
+import keyboard
 
-# --- Constants (using ALL_CAPS for convention) ---
-# Dictionary of unsecured protocols and their default ports
-UNSECURED_PROTOCOLS = {
-    'HTTP': '80',   # Port for HTTP
-    'FTP': '21',    # Port for FTP control
-    'TELNET': '23', # Port for Telnet
-    'SMTP': '25',   # Port for SMTP
-    'POP3': '110',  # Port for POP3
-    'IMAP': '143'   # Port for IMAP
-}
+# Initializes colorama for cross-platform color support
+init()
 
-# Number of packets to sniff by default
-PACKET_COUNT = 150
+def wait_for_cancel():
+    """Waits for 3 seconds, allowing the user to press Ctrl+C to cancel."""
+    print(Fore.CYAN + "\nVocê tem 3 segundos para cancelar (Ctrl+C), antes que a captura comece.\n" + Style.RESET_ALL)
+    try:
+        time.sleep(3)
+        return True
+    except KeyboardInterrupt:
+        print(Fore.RED + "\nCaptura cancelada pelo usuário." + Style.RESET_ALL)
+        return False
 
-# --- Packet Handler Functions ---
-# Consolidated handler for various protocols
-def generic_monitor(packet_list, protocol_name, detailed=False):
-    """
-    Generic handler to print packet summaries or detailed info.
-    packet_list: A list of packets captured by sniff.
-    protocol_name: The name of the protocol being monitored (e.g., 'HTTP', 'FTP').
-    detailed: If True, prints packet.show() for detailed info; otherwise, packet.summary().
-    """
 
-    if not packet_list:
-        print(f"No {protocol_name} packets captured.\n")
-        return
 
-    for p in packet_list:
-        if detailed:
-            print(f"--------------------> PACKET <--------------------\n{p.show()}\n")
-        else:
-            print(p.summary())
-    print(f"\nMonitoring {protocol_name} traffic complete.")
 
-def real_time_packet(packet, protocol_name, detailed_view):
-    if detailed_view:
-        print(f"--------------------> NEW PACKET ({protocol_name}) <--------------------\n{packet.show()}\n")
-    else:
-        print(f"[{protocol_name}] {packet.summary()}")
+def scan_tcp(num_pacotes):
+    print(Fore.WHITE + Back.RED + "\nIniciando a captura TCP... \n" + Style.RESET_ALL)
+    try:
+        sniff(
+            filter='tcp and (port 21 or port 23 or port 25 or port 37 or port 53 or port 80)',
+            count=num_pacotes,
+            prn=lambda x: x.sprintf(Fore.BLUE + "#IP DE ORIGEM:" + Fore.GREEN + "    | {IP:%IP.src%}" + Fore.RED + "\n#IP DE DESTINO:" + Fore.GREEN + "  | {IP:%IP.dst%}" + Fore.WHITE + "\n\nPAYLOAD:\n" + Fore.GREEN + "{Raw:%Raw.load%}\n" + Style.RESET_ALL)
+        )
+    except KeyboardInterrupt:
+        print("\n" + Fore.RED + "Captura TCP encerrada pelo usuário." + Style.RESET_ALL)
 
-# --- Main Menu and Sniffing Logic ---
+
+
+
+def scan_udp(num_pacotes):
+    print(Fore.WHITE + Back.RED + "\nIniciando a captura UDP... \n" + Style.RESET_ALL)
+    try:
+        sniff(
+            filter='udp and (port 21 or port 23 or port 25 or port 37 or port 53 or port 80)',
+            count=num_pacotes,
+            prn=lambda x: x.sprintf(Fore.BLUE + "#IP DE ORIGEM:" + Fore.GREEN + "   | {IP:%IP.src%}" + Fore.RED + "\n#IP DE DESTINO:" + Fore.GREEN + "  | {IP:%IP.dst%}" + Fore.WHITE + "\n\nPAYLOAD:\n" + Fore.GREEN + "{Raw:%Raw.load%}\n" + Style.RESET_ALL)
+        )
+    except KeyboardInterrupt:
+        print("\n" + Fore.RED + "Captura UDP encerrada pelo usuário." + Style.RESET_ALL)
+
+
+
+
+def look_ip(ip_search, num_pacotes):
+    print(Fore.WHITE + Back.RED + "\nIniciando a busca por IP...\n" + Style.RESET_ALL)
+    try:
+        sniff(
+            filter=ip_search,
+            count=num_pacotes,
+            prn=lambda x: x.sprintf(Fore.BLUE + "#IP DE ORIGEM:" + Fore.GREEN + "   | {IP:%IP.src%}" + Fore.RED + "\n#IP DE DESTINO:" + Fore.GREEN + "  | {IP:%IP.dst%}" + Fore.WHITE + "\n\nPAYLOAD:\n" + Fore.GREEN + "{Raw:%Raw.load%}\n" + Style.RESET_ALL)
+        )
+    except KeyboardInterrupt:
+        print("\n" + Fore.RED + "Captura encerrada pelo usuário." + Style.RESET_ALL)
+
+
+
+
 def main_menu():
-    """
-    Displays the main menu and handles user selection for traffic monitoring.
-    """
-    while True: # Loop to keep the menu running until 'exit'
-        print("-" * 60)
-        print("Select an option: \n")
-        print("-- 1. HTTP Monitor (BASIC or ADVANCED)")
-        print("-- 2. FTP Monitor")
-        print("-- 3. TELNET Monitor")
-        print("-- 4. SMTP Monitor")
-        print("-- 5. POP3 Monitor")
-        print("-- 6. IMAP Monitor")
-        print("-- exit\n")
+    while True:
+        try:
+            print(Fore.GREEN + "-"*120, "")
 
-        selection = input("> ").strip().lower() # .strip() removes whitespace, .lower() for case-insensitivity
-        time.sleep(0.5)
+            print(Fore.RED + "       UUUUUUUU     UUUUUUUUNNNNNNNN        NNNNNNNN   SSSSSSSSSSSSSSS EEEEEEEEEEEEEEEEEEEEEE       CCCCCCCCCCCCC     ")
+            print(Fore.RED + "       U::::::U     U::::::UN:::::::N       N::::::N SS:::::::::::::::SE::::::::::::::::::::E    CCC::::::::::::C     ")
+            print(Fore.RED + "       U::::::U     U::::::UN::::::::N      N::::::NS:::::SSSSSS::::::SE::::::::::::::::::::E  CC:::::::::::::::C     ")
+            print(Fore.RED + "       UU:::::U     U:::::UUN:::::::::N     N::::::NS:::::S     SSSSSSSEE::::::EEEEEEEEE::::E C:::::CCCCCCCC::::C     ")
+            print(Fore.RED + "        U:::::U     U:::::U N::::::::::N    N::::::NS:::::S              E:::::E       EEEEEEC:::::C       CCCCCC     ")
+            print(Fore.RED + "        U:::::D     D:::::U N:::::::::::N   N::::::NS:::::S              E:::::E            C:::::C                   ")
+            print(Fore.RED + "        U:::::D     D:::::U N:::::::N::::N  N::::::N S::::SSSS           E::::::EEEEEEEEEE  C:::::C                   ")
+            print(Fore.RED + "        U:::::D     D:::::U N::::::N N::::N N::::::N  SS::::::SSSSS      E:::::::::::::::E  C:::::C                   ")
+            print(Fore.RED + "        U:::::D     D:::::U N::::::N  N::::N:::::::N    SSS::::::::SS    E:::::::::::::::E  C:::::C                   ")
+            print(Fore.RED + "        U:::::D     D:::::U N::::::N   N:::::::::::N       SSSSSS::::S   E::::::EEEEEEEEEE  C:::::C                   ")
+            print(Fore.RED + "        U:::::D     D:::::U N::::::N    N::::::::::N            S:::::S  E:::::E            C:::::C                   ")
+            print(Fore.RED + "        U::::::U   U::::::U N::::::N     N:::::::::N            S:::::S  E:::::E       EEEEEEC:::::C       CCCCCC     ")
+            print(Fore.RED + "        U:::::::UUU:::::::U N::::::N      N:::::::NS:::::::SSSSSS:::::SE::::::EEEEEEEE:::::E C:::::CCCCCCCC::::C     ")
+            print(Fore.RED + "         UU:::::::::::::UU  N::::::N       N:::::::NS::::::SSSSSS:::::SE::::::::::::::::::::E  CC:::::::::::::::C     ")
+            print(Fore.RED + "           UU:::::::::UU    N::::::N        N::::::NS:::::::::::::::SS E::::::::::::::::::::E    CCC::::::::::::C     ")
+            print(Fore.RED + "             UUUUUUUUU      NNNNNNNN         NNNNNNN SSSSSSSSSSSSSSS   EEEEEEEEEEEEEEEEEEEEEE       CCCCCCCCCCCCC     ")
+            print(Fore.GREEN + "-"*120, "\n\n")
+            print(Fore.GREEN + "-"*54, "UNSEC MENU", "-"*54)
 
-        if selection == "exit":
-            print("\n----------> Exiting program! Goodbye!")
-            break # Exit the loop and end the program
+            print(Fore.YELLOW + "\n\n\n1. TCP Insecure Scan (Scan on ports: 21, 23, 25, 37, 53, 80)")
+            print(Fore.YELLOW + "2. UDP Insecure Scan (Scan on ports: 21, 23, 25, 37, 53, 80)")
+            print(Fore.YELLOW + "3. Look for specific IP")
+            print(Fore.YELLOW + "4. Sair")
+            print(Style.RESET_ALL)
 
-        print("----------> Starting Service...")
-        print("-" * 60)
-        time.sleep(1.5)
+            selection = input("Digite uma opção para seguir: \n> ")
 
-        protocol_to_monitor = None
-        port_filter = None
-        detailed_view = False
-        
-
-        # Determine protocol and port based on user selection
-        if selection == "1":
-            http_choice = input("Choose the HTTP method:\n-- 1. HTTP Monitor BASIC\n-- 2. HTTP Packet Monitor (Detailed)\n\n> ").strip()
-            if http_choice == "1":
-                protocol_to_monitor = "HTTP"
-                port_filter = UNSECURED_PROTOCOLS['HTTP']
-                detailed_view = False
-            elif http_choice == "2":
-                protocol_to_monitor = "HTTP"
-                port_filter = UNSECURED_PROTOCOLS['HTTP']
-                detailed_view = True
+            if selection == '4' or selection.lower() == 'exit':
+                print(Fore.GREEN + "Encerrando o programa." + Style.RESET_ALL)
+                break
+            
+            if selection == '1':
+                try:
+                    num_pacotes = int(input(Fore.CYAN + "\nInsira a quantidade de capturas a serem feitas: \n> " + Style.RESET_ALL))
+                    if wait_for_cancel():
+                        scan_tcp(num_pacotes)
+                except ValueError:
+                    print(Fore.RED + "Entrada inválida. Por favor, digite um número inteiro." + Style.RESET_ALL)
+            elif selection == '2':
+                try:
+                    num_pacotes = int(input(Fore.CYAN + "\nInsira a quantidade de capturas a serem feitas: \n> " + Style.RESET_ALL))
+                    if wait_for_cancel():
+                        scan_udp(num_pacotes)
+                except ValueError:
+                    print(Fore.RED + "Entrada inválida. Por favor, digite um número inteiro." + Style.RESET_ALL)
+            elif selection == '3': # Mudado para string '3'
+                try:
+                    ip_search = input(Fore.CYAN + "\nDigite o Protocolo e o host alvo: (Usage ex: tcp and host 10.0.0.0)\n> " + Style.RESET_ALL)
+                    num_pacotes = int(input(Fore.CYAN + "\nInsira a quantidade de capturas a serem feitas: \n> " + Style.RESET_ALL))
+                    if wait_for_cancel():
+                        look_ip(ip_search, num_pacotes) # Passando os argumentos
+                except ValueError:
+                    print(Fore.RED + "Entrada inválida. Por favor, digite um número inteiro." + Style.RESET_ALL)
             else:
-                print("Invalid HTTP option. Please try again.")
-                continue # Go back to main menu
-        elif selection == "2":
-            protocol_to_monitor = "FTP"
-            port_filter = UNSECURED_PROTOCOLS['FTP']
-        elif selection == "3":
-            protocol_to_monitor = "TELNET"
-            port_filter = UNSECURED_PROTOCOLS['TELNET']
-        elif selection == "4":
-            protocol_to_monitor = "SMTP"
-            port_filter = UNSECURED_PROTOCOLS['SMTP']
-        elif selection == "5":
-            protocol_to_monitor = "POP3"
-            port_filter = UNSECURED_PROTOCOLS['POP3']
-        elif selection == "6":
-            protocol_to_monitor = "IMAP"
-            port_filter = UNSECURED_PROTOCOLS['IMAP']
-        else:
-            print("Invalid selection. Please choose a number from 1 to 6, or 'exit'.")
-            continue # Go back to main menu
+                print(Fore.RED + "Opção inválida." + Style.RESET_ALL)
 
-        if protocol_to_monitor and port_filter:
-            try:
-                # Construct the filter string
-                filter_string = f"tcp port {port_filter}"
-                print(f"----------> Started Service: {protocol_to_monitor} monitor running!")
-                print("-" * 60)
-                print(f"Sniffing on filter: {filter_string} for {PACKET_COUNT} packets...\n")
-                # Note: 'iface=""' means Scapy tries to find the default interface.
-                # For specific interfaces, replace "" with your interface name (e.g., "eth0", "Wi-Fi").
-                captured_packets = sniff(filter=filter_string, prn=functools.partial(real_time_packet, protocol_name=protocol_to_monitor, detailed_view=detailed_view), count=PACKET_COUNT, iface="")
-                # Call the generic monitor with appropriate parameters
-                generic_monitor(captured_packets, protocol_to_monitor, detailed=detailed_view)
+        except Exception as e:
+            print(Fore.RED + f"Ocorreu um erro: {e}. Certifique-se de que você tem privilégios de administrador." + Style.RESET_ALL)
+            break
 
-            except PermissionError:
-                print("\nError: Permission denied. You might need to run this script with root/administrator privileges.")
-                print("On Linux/macOS: sudo python your_script_name.py")
-                print("On Windows: Run your command prompt/PowerShell as Administrator.")
-            except Exception as e:
-                print(f"An unexpected error occurred during sniffing: {e}")
-        else:
-            print("Could not determine protocol or port to monitor. Please try again.")
-
-# --- Start the application ---
-if __name__ == "__main__":
-    main_menu()
+main_menu()
