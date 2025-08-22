@@ -3,11 +3,11 @@ from colorama import init, Fore, Back, Style
 import time
 import keyboard
 
-# Initializes colorama for cross-platform color support
+# Inicializa a função do colorama.
 init()
 
+# Função para cancelar a execução de captura.
 def wait_for_cancel():
-    """Waits for 3 seconds, allowing the user to press Ctrl+C to cancel."""
     print(Fore.CYAN + "\nVocê tem 3 segundos para cancelar (Ctrl+C), antes que a captura comece.\n" + Style.RESET_ALL)
     try:
         time.sleep(3)
@@ -18,7 +18,7 @@ def wait_for_cancel():
 
 
 
-
+# Função para scan de pacotes TCP inseguros.
 def scan_tcp(num_pacotes):
     print(Fore.WHITE + Back.RED + "\nIniciando a captura TCP... \n" + Style.RESET_ALL)
     try:
@@ -32,7 +32,7 @@ def scan_tcp(num_pacotes):
 
 
 
-
+# Função para scan de pacotes UDP inseguros.
 def scan_udp(num_pacotes):
     print(Fore.WHITE + Back.RED + "\nIniciando a captura UDP... \n" + Style.RESET_ALL)
     try:
@@ -46,7 +46,7 @@ def scan_udp(num_pacotes):
 
 
 
-
+# Função para scan de protocolos e ips especificos.
 def look_ip(ip_search, num_pacotes):
     print(Fore.WHITE + Back.RED + "\nIniciando a busca por IP...\n" + Style.RESET_ALL)
     try:
@@ -60,7 +60,7 @@ def look_ip(ip_search, num_pacotes):
 
 
 
-
+# Menu principal.
 def main_menu():
     while True:
         try:
