@@ -93,7 +93,7 @@ def main_menu():
 
             selection = input("Digite uma opção para seguir: \n> ")
 
-            if selection == '4' or selection.lower() == 'exit':
+            if selection == '4' or selection.lower() == 'exit' or selection.lower() == 'sair':
                 print(Fore.GREEN + "Encerrando o programa." + Style.RESET_ALL)
                 break
             
