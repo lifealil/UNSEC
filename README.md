@@ -51,8 +51,8 @@ Sair: Encerra o programa de forma segura.
 
 
 
+
 ⚠️ Considerações Importantes
 
 Permissões: A captura de pacotes de rede é uma operação de baixo nível que requer privilégios de superusuário. Se o programa não funcionar, verifique se você o executou com as permissões corretas.
-
 Finalidade: O UNSEC é uma ferramenta educacional. Utilize-a de forma responsável e apenas em redes onde você tem permissão explícita para monitorar o tráfego. O uso indevido pode ser ilegal e antiético.
